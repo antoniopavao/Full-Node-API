@@ -15,6 +15,12 @@ module.exports = [{
     },
 
     {
+        endpoint: "/users",
+        method: 'POST',
+        handler: UserController.createUser,
+    },
+
+    {
         endpoint: "/products",
         method: 'GET',
         handler: ProductController.listProducts,
@@ -24,6 +30,12 @@ module.exports = [{
         endpoint: "/products/:id",
         method: 'GET',
         handler: ProductController.getProductsById,
+    },
+
+        {
+        endpoint: "/products",
+        method: 'POST',
+        handler: ProductController.createProduct,
     },
 
 ]

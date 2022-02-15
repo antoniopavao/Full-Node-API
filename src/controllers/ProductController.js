@@ -32,5 +32,28 @@ module.exports = {
 
         response.send(200, product);
 
+    },
+
+    createProduct(request, response) {
+        let body = '';
+
+        request.on('data', (chunk) => {
+            body += chunk;
+        })
+
+        request.on('end', () => {
+            console.log(body);
+            body = JSON.parse(body);
+
+            const lastProductId = products[products.length - 1].id;
+            const newProduct = {
+                id: lastProductId + 1,
+                name: body.name
+            }
+
+            products.push(newProduct);
+            response.send(200, newProduct);
+        })
+
     }
 }
