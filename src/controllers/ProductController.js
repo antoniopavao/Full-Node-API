@@ -14,10 +14,8 @@ module.exports = {
             return a.id > b.id ? 1 : -1;
 
         })
-        response.writeHead(200, {
-            'Content-Type': 'application/json'
-        });
-        response.end(JSON.stringify(sortedProducts));
+        response.send(200, sortedProducts);
+
     },
     getProductsById(request, response) {
         const {
@@ -27,16 +25,12 @@ module.exports = {
         const product = products.find((product) => product.id === Number(id));
 
         if (!product) {
-            response.writeHead(400, {
-                'Content-Type': 'application/json'
-            });
-            response.end(JSON.stringify({
+            return response.send(400,{
                 error: "Product not found"
-            }));
-        }
+            });
+        };
 
+        response.send(200, product);
 
-        response.writeHead(200, { 'Content-Type': 'application/json' });
-        response.end(JSON.stringify(product));
     }
 }
