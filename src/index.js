@@ -20,14 +20,17 @@ const server = http.createServer((request, response) => {
     let id = null;
 
     const splitEndpoint = pathname.split('/').filter((routeItem) => Boolean(routeItem));
+    console.log(`Split endpoint: ${splitEndpoint}`)
 
     if (splitEndpoint.length > 1) {
         pathname = `/${splitEndpoint[0]}/:id`;
         id = splitEndpoint[1];
     }
+    console.log(`splitEndpoint lenght ${splitEndpoint.length}`)
 
     const route =
         routes.find((routeObj) => (routeObj.endpoint === pathname && routeObj.method === request.method));
+        console.log(`route: ${route}`)
 
     if (route) {
 
@@ -35,6 +38,7 @@ const server = http.createServer((request, response) => {
         request.params = {
             id
         };
+        console.log(`parsedUrl ${parsedUrl}`)
 
         response.send = (statusCode, body) => {
             response.writeHead(statusCode, {

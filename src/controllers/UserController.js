@@ -35,7 +35,7 @@ module.exports = {
 
     createUser(request, response) {
 
-        const {body} = request;
+        const {body} = request.body;
         const lastUserId = users[users.length - 1].id;
         const newUser = {
             id: lastUserId + 1,
