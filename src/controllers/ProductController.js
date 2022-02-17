@@ -55,5 +55,37 @@ module.exports = {
             response.send(200, newProduct);
         })
 
+    },
+    updateProduct(request, response) {
+        const {id} = request.params;
+        const {name} = request.body;
+
+        id = Number(id);
+
+        const product = products.find((product) => product.id === id);
+        if(!product) {
+            return response.send(400, {message: 'Product not found'})
+        }
+
+        products = products.map((product) => {
+            if(product.id === id) {
+                return {
+                    ...product,
+                    name
+                }
+            }
+
+            return product;
+        })
+
+        response.send(204, {id, name});
+    },
+
+    deleteProduct(request, response) {
+        let {id} = request.params;
+        id = Number(id);
+
+        products = products.filter((product) => product.id !== id);
+        response.send(200, { deleted: true });
     }
 }
