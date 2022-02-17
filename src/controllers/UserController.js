@@ -1,4 +1,4 @@
-const users = require("../mocks/users");
+let  users = require("../mocks/users");
 
 module.exports = {
     listUsers(request, response) {
@@ -10,8 +10,9 @@ module.exports = {
             if (order === 'desc') {
                 return a.id < b.id ? 1 : -1;
             }
-            return a.id > b.id ? 1 : -1;
+                return a.id > b.id ? 1 : -1;
         });
+        console.log(sortedUsers);
 
         response.send(200, sortedUsers);
     },
@@ -35,7 +36,7 @@ module.exports = {
 
     createUser(request, response) {
 
-        const {body} = request.body;
+        const {body} = request;
         const lastUserId = users[users.length - 1].id;
         const newUser = {
             id: lastUserId + 1,
@@ -44,5 +45,44 @@ module.exports = {
         users.push(newUser);
         response.send(200, newUser);
 
+    },
+ 
+    updateUserById(request, response) {
+        const {name} = request.body;
+        let {id} = request.params;
+
+        id = Number(id);
+
+        const user = users.find((user) => user.id === id);
+
+        if (!user) {
+            return response.send(400, {
+                error: 'User not found'
+            });
+        }
+
+        users = users.map((user) =>{
+            if(user.id === id) {
+                return {
+                    ...user,
+                    name
+                }
+            }
+
+            return user;
+        })
+
+        response.send(204, {id, name});
+
+    },
+
+    deleteUserById(request, response) {
+        let {id} = request.params;
+        id = Number(id);
+
+        users = users.filter(user => user.id !== id);
+        response.send(200, {deleted: true});
     }
+
+
 }

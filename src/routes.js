@@ -21,6 +21,18 @@ module.exports = [{
     },
 
     {
+        endpoint: "/users/:id",
+        method: 'PUT',
+        handler: UserController.updateUserById,
+    },
+
+    {
+        endpoint: "/users/:id",
+        method: 'DELETE',
+        handler: UserController.deleteUserById,
+    },
+
+    {
         endpoint: "/products",
         method: 'GET',
         handler: ProductController.listProducts,
@@ -32,10 +44,11 @@ module.exports = [{
         handler: ProductController.getProductsById,
     },
 
-        {
+    {
         endpoint: "/products",
         method: 'POST',
         handler: ProductController.createProduct,
     },
+
 
 ]

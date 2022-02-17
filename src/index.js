@@ -1,44 +1,42 @@
 const http = require('http');
+const routes = require('./routes');
+
 const {
     URL
 } = require('url');
 
 const bodyParser = require("./helpers/bodyParser")
-const routes = require('./routes');
 
 
 
 const server = http.createServer((request, response) => {
 
-    const parsedUrl = new URL(`http://localhost:${request.url}`);
+    const parsedUrl = new URL(`http://localhost:3000${request.url}`);
 
     console.log(`Request method: ${request.method} | Endpoint: ${parsedUrl.pathname}`);
 
     let {
         pathname
     } = parsedUrl;
+
     let id = null;
 
-    const splitEndpoint = pathname.split('/').filter((routeItem) => Boolean(routeItem));
-    console.log(`Split endpoint: ${splitEndpoint}`)
+    const splitEndpoint = pathname.split('/').filter(Boolean);
 
     if (splitEndpoint.length > 1) {
         pathname = `/${splitEndpoint[0]}/:id`;
         id = splitEndpoint[1];
     }
-    console.log(`splitEndpoint lenght ${splitEndpoint.length}`)
-
+  
     const route =
         routes.find((routeObj) => (routeObj.endpoint === pathname && routeObj.method === request.method));
-        console.log(`route: ${route}`)
+ 
 
     if (route) {
-
-        request.query = parsedUrl.query;
+        request.query = Object.fromEntries(parsedUrl.searchParams);
         request.params = {
             id
         };
-        console.log(`parsedUrl ${parsedUrl}`)
 
         response.send = (statusCode, body) => {
             response.writeHead(statusCode, {
@@ -48,10 +46,8 @@ const server = http.createServer((request, response) => {
         }
 
         if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
-            bodyParser(request, () => {
-                route.handler(request, response);
-
-            })
+            bodyParser(request, () => 
+                route.handler(request, response))
         } else {
             route.handler(request, response);
         }
